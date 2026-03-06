@@ -9,6 +9,11 @@ import throttle from 'lodash.throttle';
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface NegativeConversionModalState {
+  isOpen: boolean;
+  targetPath: string | null;
+}
+
 interface NegativeParams {
   red_weight: number;
   green_weight: number;

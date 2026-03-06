@@ -3,6 +3,15 @@ import Button from '../ui/Button';
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface ConfirmModalState {
+  confirmText?: string;
+  confirmVariant?: string;
+  isOpen: boolean;
+  message?: string;
+  onConfirm?(): void;
+  title?: string;
+}
+
 export default function ConfirmModal() {
   const {
     confirmModalState: { confirmText = 'Confirm', confirmVariant = 'primary', isOpen, message, onConfirm, title },

@@ -4,6 +4,14 @@ import Button from '../ui/Button';
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface HdrModalState {
+  error: string | null;
+  finalImageBase64: string | null;
+  isOpen: boolean;
+  progressMessage: string | null;
+  stitchingSourcePaths: Array<string>;
+}
+
 export default function HdrModal() {
   const {
     hdrModalState: { error, finalImageBase64, isOpen, progressMessage },

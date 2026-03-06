@@ -23,6 +23,11 @@ import { LAYOUTS, type Layout, type LayoutDefinition } from '../../utils/Collage
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface CollageModalState {
+  isOpen: boolean;
+  sourceImages: ImageFile[];
+}
+
 interface LoadedImage {
   path: string;
   url: string;

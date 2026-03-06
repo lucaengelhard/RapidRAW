@@ -5,6 +5,16 @@ import Slider from '../ui/Slider';
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface DenoiseModalState {
+  isOpen: boolean;
+  isProcessing: boolean;
+  previewBase64: string | null;
+  originalBase64?: string | null;
+  error: string | null;
+  targetPath: string | null;
+  progressMessage: string | null;
+}
+
 const ImageCompare = ({ original, denoised }: { original: string; denoised: string }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [zoom, setZoom] = useState(1);

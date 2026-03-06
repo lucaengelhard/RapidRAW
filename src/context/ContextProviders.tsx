@@ -5,6 +5,7 @@ import { CLERK_PUBLISHABLE_KEY } from '../utils/constants';
 import {
   AppSettings,
   BrushSettings,
+  CullingSuggestions,
   FilterCriteria,
   ImageFile,
   LibraryViewMode,
@@ -26,20 +27,36 @@ import { ChannelConfig } from '../components/adjustments/Curves';
 import { DEFAULT_THEME_ID } from '../utils/themes';
 import { ImageDimensions } from '../hooks/useImageRenderSize';
 import { OverlayMode } from '../components/panel/right/CropPanel';
-import {
-  CollageModalState,
-  CollapsibleSectionsState,
-  ConfirmModalState,
-  CullingModalState,
-  DenoiseModalState,
-  HdrModalState,
-  NegativeConversionModalState,
-  PanoramaModalState,
-  SearchCriteria,
-} from '../App';
 import { ToolType } from '../components/panel/right/Masks';
 import { useHistoryState } from '../hooks/useHistoryState';
 import { ExportState, ImportState, Status } from '../components/ui/ExportImportProperties';
+import { CollageModalState } from '../components/modals/CollageModal';
+import { ConfirmModalState } from '../components/modals/ConfirmModal';
+import { CullingModalState } from '../components/modals/CullingModal';
+import { DenoiseModalState } from '../components/modals/DenoiseModal';
+import { HdrModalState } from '../components/modals/HdrModal';
+import { NegativeConversionModalState } from '../components/modals/NegativeConversionModal';
+import { PanoramaModalState } from '../components/modals/PanoramaModal';
+
+export interface CollapsibleSectionsState {
+  basic: boolean;
+  color: boolean;
+  curves: boolean;
+  details: boolean;
+  effects: boolean;
+}
+
+export interface MultiSelectOptions {
+  onSimpleClick(p: any): void;
+  updateLibraryActivePath: boolean;
+  shiftAnchor: string | null;
+}
+
+export interface SearchCriteria {
+  tags: string[];
+  text: string;
+  mode: 'AND' | 'OR';
+}
 
 export function ContextProviders({ children }: PropsWithChildren) {
   return (

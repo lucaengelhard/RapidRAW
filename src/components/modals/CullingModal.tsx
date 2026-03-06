@@ -10,6 +10,14 @@ import Dropdown from '../ui/Dropdown';
 import { useAppState } from '../../context/ContextProviders';
 import { useHandlers } from '../../hooks/useHandlers';
 
+export interface CullingModalState {
+  isOpen: boolean;
+  suggestions: CullingSuggestions | null;
+  progress: { current: number; total: number; stage: string } | null;
+  error: string | null;
+  pathsToCull: Array<string>;
+}
+
 type CullAction = 'reject' | 'rate_zero' | 'delete';
 
 const CULL_ACTIONS: {
