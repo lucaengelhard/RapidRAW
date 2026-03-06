@@ -128,23 +128,12 @@ export const MemoizedLibraryView = React.memo(() => {
         )}
         {rootPath && (
           <BottomBar
-            isCopied={isCopied}
-            isCopyDisabled={multiSelectedPaths.length !== 1}
-            isExportDisabled={multiSelectedPaths.length === 0}
             isLibraryView={true}
-            isPasted={isPasted}
             isPasteDisabled={copiedAdjustments === null || multiSelectedPaths.length === 0}
             isRatingDisabled={multiSelectedPaths.length === 0}
             isResetDisabled={multiSelectedPaths.length === 0}
-            multiSelectedPaths={multiSelectedPaths}
-            onCopy={handleCopyAdjustments}
             onExportClick={() => setIsLibraryExportPanelVisible((prev) => !prev)}
-            onOpenCopyPasteSettings={() => setIsCopyPasteSettingsModalOpen(true)}
-            onPaste={() => handlePasteAdjustments()}
-            onRate={handleRate}
-            onReset={() => handleResetAdjustments()}
             rating={libraryActiveAdjustments.rating || 0}
-            thumbnailAspectRatio={thumbnailAspectRatio}
             totalImages={imageList.length}
           />
         )}

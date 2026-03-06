@@ -182,37 +182,10 @@ export default function MainView() {
               onMouseDown={createResizeHandler(setBottomPanelHeight, bottomPanelHeight)}
             />
             <BottomBar
-              filmstripHeight={bottomPanelHeight}
-              imageList={sortedImageList}
-              imageRatings={imageRatings}
-              isCopied={isCopied}
-              isCopyDisabled={!selectedImage}
-              isFilmstripVisible={uiVisibility.filmstrip}
-              isLoading={isViewLoading}
-              isPasted={isPasted}
               isPasteDisabled={copiedAdjustments === null}
               isRatingDisabled={!selectedImage}
-              isResizing={isResizing}
-              multiSelectedPaths={multiSelectedPaths}
-              displaySize={displaySize}
-              originalSize={originalSize}
-              baseRenderSize={baseRenderSize}
-              onClearSelection={handleClearSelection}
-              onContextMenu={handleThumbnailContextMenu}
-              onCopy={handleCopyAdjustments}
-              onOpenCopyPasteSettings={() => setIsCopyPasteSettingsModalOpen(true)}
-              onImageSelect={handleImageClick}
-              onPaste={() => handlePasteAdjustments()}
-              onRate={handleRate}
-              onZoomChange={handleZoomChange}
+              isCopyDisabled={!selectedImage}
               rating={adjustments.rating || 0}
-              selectedImage={selectedImage}
-              setIsFilmstripVisible={(value: boolean) =>
-                setUiVisibility((prev: UiVisibility) => ({ ...prev, filmstrip: value }))
-              }
-              thumbnailAspectRatio={thumbnailAspectRatio}
-              thumbnails={thumbnails}
-              zoom={zoom}
               totalImages={sortedImageList.length}
             />
           </div>

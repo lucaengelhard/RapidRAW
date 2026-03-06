@@ -2,44 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { Star, Copy, ClipboardPaste, RotateCcw, ChevronUp, ChevronDown, Check, Save, Settings } from 'lucide-react';
 import clsx from 'clsx';
 import Filmstrip from './Filmstrip';
-import { GLOBAL_KEYS, ImageFile, SelectedImage, ThumbnailAspectRatio } from '../ui/AppProperties';
+import { GLOBAL_KEYS, ImageFile, SelectedImage, ThumbnailAspectRatio, UiVisibility } from '../ui/AppProperties';
+import { useAppState } from '../../context/ContextProviders';
+import { useHandlers } from '../../hooks/useHandlers';
+import { useSortedImageList } from '../../hooks/useSortedImageList';
 
 interface BottomBarProps {
-  filmstripHeight?: number;
-  imageList?: Array<ImageFile>;
-  imageRatings?: Record<string, number> | null;
-  isCopied: boolean;
-  isCopyDisabled: boolean;
-  isExportDisabled?: boolean;
-  isFilmstripVisible?: boolean;
   isLibraryView?: boolean;
-  isLoading?: boolean;
-  isPasted: boolean;
   isPasteDisabled: boolean;
   isRatingDisabled?: boolean;
+  isCopyDisabled?: boolean;
+  isExportDisabled?: boolean;
   isResetDisabled?: boolean;
-  isResizing?: boolean;
-  multiSelectedPaths?: Array<string>;
-  onClearSelection?(): void;
-  onContextMenu?(event: any, path: string): void;
-  onCopy(): void;
   onExportClick?(): void;
-  onImageSelect?(path: string, event: any): void;
-  onOpenCopyPasteSettings?(): void;
-  onPaste(): void;
-  onRate(rate: number): void;
-  onReset?(): void;
-  onZoomChange?(zoomValue: number, fitToWindow?: boolean): void;
   rating: number;
-  selectedImage?: SelectedImage;
-  setIsFilmstripVisible?(isVisible: boolean): void;
-  thumbnails?: Record<string, string>;
-  thumbnailAspectRatio: ThumbnailAspectRatio;
-  zoom?: number;
-  displaySize?: { width: number; height: number };
-  originalSize?: { width: number; height: number };
-  baseRenderSize?: { width: number; height: number };
-  totalImages?: number;
+  totalImages: number;
 }
 
 interface StarRatingProps {
@@ -68,8 +45,8 @@ const StarRating = ({ rating, onRate, disabled }: StarRatingProps) => {
                 disabled
                   ? 'text-text-secondary opacity-40'
                   : starValue <= rating
-                  ? 'fill-accent text-accent'
-                  : 'text-text-secondary hover:text-accent',
+                    ? 'fill-accent text-accent'
+                    : 'text-text-secondary hover:text-accent',
               )}
             />
           </button>
@@ -80,40 +57,53 @@ const StarRating = ({ rating, onRate, disabled }: StarRatingProps) => {
 };
 
 export default function BottomBar({
-  filmstripHeight,
-  imageList = [],
-  imageRatings,
-  isCopied,
-  isCopyDisabled,
-  isExportDisabled,
-  isFilmstripVisible,
   isLibraryView = false,
-  isLoading = false,
-  isPasted,
   isPasteDisabled,
   isRatingDisabled = false,
+  isCopyDisabled,
+  isExportDisabled,
   isResetDisabled = false,
-  isResizing,
-  multiSelectedPaths = [],
-  onClearSelection,
-  onContextMenu,
-  onCopy,
   onExportClick,
-  onImageSelect,
-  onOpenCopyPasteSettings,
-  onPaste,
-  onRate,
-  onReset,
-  onZoomChange = () => {},
   rating,
-  selectedImage,
-  setIsFilmstripVisible,
-  thumbnails,
-  thumbnailAspectRatio,
-  displaySize,
-  originalSize,
   totalImages,
 }: BottomBarProps) {
+  const {
+    bottomPanelHeight: filmstripHeight,
+    imageRatings,
+    isCopied,
+    isPasted,
+    selectedImage,
+    uiVisibility: { filmstrip: isFilmstripVisible },
+    isViewLoading: isLoading = false,
+    isResizing,
+    multiSelectedPaths,
+    displaySize,
+    originalSize,
+    thumbnails,
+    thumbnailAspectRatio,
+    setUiVisibility,
+    setIsCopyPasteSettingsModalOpen,
+  } = useAppState();
+
+  const {
+    handleClearSelection: onClearSelection,
+    handleThumbnailContextMenu: onContextMenu,
+    handleCopyAdjustments: onCopy,
+    handleImageClick: onImageSelect,
+    handlePasteAdjustments: onPaste,
+    handleRate: onRate,
+    handleZoomChange: onZoomChange,
+  } = useHandlers();
+
+  const { sortedImageList: imageList } = useSortedImageList();
+
+  const setIsFilmstripVisible = () => (value: boolean) =>
+    setUiVisibility((prev: UiVisibility) => ({ ...prev, filmstrip: value }));
+
+  const onOpenCopyPasteSettings = () => setIsCopyPasteSettingsModalOpen(true);
+
+  const onReset = undefined;
+
   const [isEditingPercent, setIsEditingPercent] = useState(false);
   const [percentInputValue, setPercentInputValue] = useState('');
   const isDraggingSlider = useRef(false);
@@ -131,7 +121,6 @@ export default function BottomBar({
   const numSelected = multiSelectedPaths.length;
   const total = totalImages ?? 0;
   const showSelectionCounter = numSelected > 1;
-
 
   useEffect(() => {
     if (isZoomReady && !isDraggingSlider.current) {
@@ -228,12 +217,9 @@ export default function BottomBar({
 
   return (
     <div className="flex-shrink-0 bg-bg-secondary rounded-lg flex flex-col">
-      {!isLibraryView && (
+      {!isLibraryView && selectedImage !== null && (
         <div
-          className={clsx(
-            'overflow-hidden',
-            !isResizing && 'transition-all duration-300 ease-in-out',
-          )}
+          className={clsx('overflow-hidden', !isResizing && 'transition-all duration-300 ease-in-out')}
           style={{ height: isFilmstripVisible ? `${filmstripHeight}px` : '0px' }}
         >
           <div className="w-full p-2" style={{ height: `${filmstripHeight}px` }}>
@@ -253,12 +239,11 @@ export default function BottomBar({
           </div>
         </div>
       )}
-
       <div
         className={clsx(
           'flex-shrink-0 h-10 flex items-center justify-between px-3',
-          !isLibraryView && 'border-t', 
-          (!isLibraryView && isFilmstripVisible) ? 'border-surface' : 'border-transparent'
+          !isLibraryView && 'border-t',
+          !isLibraryView && isFilmstripVisible ? 'border-surface' : 'border-transparent',
         )}
       >
         <div className="flex items-center gap-4">
@@ -276,7 +261,7 @@ export default function BottomBar({
             <button
               className="w-8 h-8 flex items-center justify-center rounded-md text-text-secondary hover:bg-surface hover:text-text-primary transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed"
               disabled={isPasteDisabled}
-              onClick={onPaste}
+              onClick={() => onPaste}
               data-tooltip="Paste Settings"
             >
               {isPasted ? <Check size={18} className="text-green-500 animate-pop-in" /> : <ClipboardPaste size={18} />}
@@ -296,7 +281,9 @@ export default function BottomBar({
             )}
           >
             <div className="h-5 w-px bg-surface mr-4"></div>
-            <span className="text-sm text-text-secondary whitespace-nowrap">{numSelected} of {total} images selected</span>
+            <span className="text-sm text-text-secondary whitespace-nowrap">
+              {numSelected} of {total} images selected
+            </span>
           </div>
         </div>
         <div className="flex-grow" />
@@ -333,7 +320,7 @@ export default function BottomBar({
                   {isZoomLabelHovered ? 'Reset Zoom' : 'Zoom'}
                 </span>
               </div>
-              
+
               <div className="relative flex-1 h-5">
                 <div className="absolute top-1/2 left-0 w-full h-1.5 -translate-y-1/2 bg-surface rounded-full pointer-events-none" />
                 <input
