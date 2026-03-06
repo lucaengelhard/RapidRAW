@@ -5,7 +5,7 @@ import { ContextProviders, useAppState } from './context/ContextProviders';
 import { useSortedImageList } from './hooks/useSortedImageList';
 import { useHandlers } from './hooks/useHandlers';
 import { useGlobalEffects } from './hooks/useGlobalEffects';
-import Modals from './window/modals/Modals';
+import Modals from './window/Modals';
 import clsx from 'clsx';
 import LibraryExportPanel from './components/panel/right/LibraryExportPanel';
 import Resizer from './components/ui/Resizer';
