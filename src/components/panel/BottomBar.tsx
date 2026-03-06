@@ -97,7 +97,7 @@ export default function BottomBar({
 
   const { sortedImageList: imageList } = useSortedImageList();
 
-  const setIsFilmstripVisible = () => (value: boolean) =>
+  const setIsFilmstripVisible = (value: boolean) =>
     setUiVisibility((prev: UiVisibility) => ({ ...prev, filmstrip: value }));
 
   const onOpenCopyPasteSettings = () => setIsCopyPasteSettingsModalOpen(true);
@@ -223,19 +223,7 @@ export default function BottomBar({
           style={{ height: isFilmstripVisible ? `${filmstripHeight}px` : '0px' }}
         >
           <div className="w-full p-2" style={{ height: `${filmstripHeight}px` }}>
-            <Filmstrip
-              imageList={imageList}
-              imageRatings={imageRatings}
-              isLoading={isLoading}
-              multiSelectedPaths={multiSelectedPaths}
-              onClearSelection={onClearSelection}
-              onContextMenu={onContextMenu}
-              onImageSelect={onImageSelect}
-              selectedImage={selectedImage}
-              thumbnails={thumbnails}
-              thumbnailAspectRatio={thumbnailAspectRatio}
-              totalImages={imageList.length}
-            />
+            <Filmstrip />
           </div>
         </div>
       )}
@@ -368,7 +356,7 @@ export default function BottomBar({
             <div className="h-5 w-px bg-surface"></div>
             <button
               className="p-1.5 rounded-md text-text-secondary hover:bg-surface hover:text-text-primary transition-colors"
-              onClick={() => setIsFilmstripVisible?.(!isFilmstripVisible)}
+              onClick={() => setIsFilmstripVisible(!isFilmstripVisible)}
               data-tooltip={isFilmstripVisible ? 'Collapse Filmstrip' : 'Expand Filmstrip'}
             >
               {isFilmstripVisible ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
