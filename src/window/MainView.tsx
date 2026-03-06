@@ -166,63 +166,7 @@ export default function MainView() {
     return (
       <div className="flex flex-row flex-grow h-full min-h-0">
         <div className="flex-1 flex flex-col min-w-0">
-          <Editor
-            activeAiPatchContainerId={activeAiPatchContainerId}
-            activeAiSubMaskId={activeAiSubMaskId}
-            activeMaskContainerId={activeMaskContainerId}
-            activeMaskId={activeMaskId}
-            activeRightPanel={activeRightPanel}
-            adjustments={adjustments}
-            brushSettings={brushSettings}
-            canRedo={canRedo}
-            canUndo={canUndo}
-            finalPreviewUrl={finalPreviewUrl}
-            isFullScreen={isFullScreen}
-            isLoading={isViewLoading}
-            isSliderDragging={isSliderDragging}
-            isMaskControlHovered={isMaskControlHovered}
-            isStraightenActive={isStraightenActive}
-            isWaveformVisible={isWaveformVisible}
-            onBackToLibrary={handleBackToLibrary}
-            onCloseWaveform={() => setIsWaveformVisible(false)}
-            onContextMenu={handleEditorContextMenu}
-            onGenerateAiMask={handleGenerateAiMask}
-            onQuickErase={handleQuickErase}
-            onRedo={redo}
-            onSelectAiSubMask={setActiveAiSubMaskId}
-            onSelectMask={setActiveMaskId}
-            onStraighten={handleStraighten}
-            onToggleFullScreen={handleToggleFullScreen}
-            onToggleWaveform={handleToggleWaveform}
-            onUndo={undo}
-            onZoomed={handleUserTransform}
-            renderedRightPanel={renderedRightPanel}
-            selectedImage={selectedImage}
-            isWbPickerActive={isWbPickerActive}
-            onWbPicked={handleWbPicked}
-            setAdjustments={setAdjustments}
-            setShowOriginal={setShowOriginal}
-            showOriginal={showOriginal}
-            targetZoom={zoom}
-            thumbnails={thumbnails}
-            transformWrapperRef={transformWrapperRef}
-            transformedOriginalUrl={transformedOriginalUrl}
-            uncroppedAdjustedPreviewUrl={uncroppedAdjustedPreviewUrl}
-            updateSubMask={updateSubMask}
-            waveform={waveform}
-            onDisplaySizeChange={handleDisplaySizeChange}
-            onInitialFitScale={setInitialFitScale}
-            onZoomChange={handleZoomChange}
-            originalSize={originalSize}
-            baseRenderSize={baseRenderSize}
-            isLoadingFullRes={isLoadingFullRes}
-            isRotationActive={isRotationActive}
-            overlayMode={overlayMode}
-            overlayRotation={overlayRotation}
-            adjustmentsHistory={adjustmentsHistory}
-            adjustmentsHistoryIndex={adjustmentsHistoryIndex}
-            goToAdjustmentsHistoryIndex={goToAdjustmentsHistoryIndex}
-          />
+          <Editor />
           <div
             className={clsx(
               'flex flex-col w-full overflow-hidden flex-shrink-0',
