@@ -4,13 +4,9 @@ import clsx from 'clsx';
 import { ADJUSTMENT_SECTIONS, COPYABLE_ADJUSTMENT_KEYS, CopyPasteSettings, PasteMode } from '../../utils/adjustments';
 import Button from '../ui/Button';
 import Switch from '../ui/Switch';
-
-interface CopyPasteSettingsModalProps {
-  isOpen: boolean;
-  onClose(): void;
-  onSave(settings: CopyPasteSettings): void;
-  settings: CopyPasteSettings;
-}
+import { useAppState } from '../../context/ContextProviders';
+import { useHandlers } from '../../hooks/useHandlers';
+import { AppSettings } from '../ui/AppProperties';
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const formatLabel = (key: string) => key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
@@ -111,7 +107,15 @@ const PasteModeSwitch = ({ selectedMode, onModeChange, isVisible }: PasteModeSwi
   );
 };
 
-export default function CopyPasteSettingsModal({ isOpen, onClose, onSave, settings }: CopyPasteSettingsModalProps) {
+export default function CopyPasteSettingsModal() {
+  const { isCopyPasteSettingsModalOpen: isOpen, setIsCopyPasteSettingsModalOpen, appSettings } = useAppState();
+  const { handleSettingsChange } = useHandlers();
+
+  const onClose = () => setIsCopyPasteSettingsModalOpen(false);
+  const onSave = (newSettings: CopyPasteSettings) =>
+    handleSettingsChange({ ...appSettings, copyPasteSettings: newSettings } as AppSettings);
+  const settings = appSettings?.copyPasteSettings as CopyPasteSettings;
+
   const [isMounted, setIsMounted] = useState(false);
   const [show, setShow] = useState(false);
   const [localSettings, setLocalSettings] = useState<CopyPasteSettings>(settings || DEFAULT_SETTINGS);

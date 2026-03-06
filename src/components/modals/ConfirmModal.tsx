@@ -1,27 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import Button from '../ui/Button';
+import { useAppState } from '../../context/ContextProviders';
+import { useHandlers } from '../../hooks/useHandlers';
 
-interface ConfirmModalProps {
-  cancelText?: string;
-  confirmText?: string;
-  confirmVariant?: string;
-  isOpen: boolean;
-  message?: string;
-  onClose(): void;
-  onConfirm?(): void;
-  title?: string;
-}
+export default function ConfirmModal() {
+  const {
+    confirmModalState: { confirmText = 'Confirm', confirmVariant = 'primary', isOpen, message, onConfirm, title },
+  } = useAppState();
+  const { closeConfirmModal: onClose } = useHandlers();
 
-export default function ConfirmModal({
-  cancelText = 'Cancel',
-  confirmText = 'Confirm',
-  confirmVariant = 'primary',
-  isOpen,
-  message,
-  onClose,
-  onConfirm,
-  title,
-}: ConfirmModalProps) {
+  const cancelText = 'Cancel';
+
   const [isMounted, setIsMounted] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -104,9 +93,9 @@ export default function ConfirmModal({
           >
             {cancelText}
           </Button>
-          <Button 
-            onClick={handleConfirm} 
-            variant={confirmVariant} 
+          <Button
+            onClick={handleConfirm}
+            variant={confirmVariant}
             autoFocus={true}
             className="focus:outline-none focus:ring-0 focus:ring-offset-0"
           >
