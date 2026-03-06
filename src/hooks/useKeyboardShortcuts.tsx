@@ -1,103 +1,65 @@
 import { useEffect } from 'react';
 import { ImageFile, Panel, SelectedImage } from '../components/ui/AppProperties';
+import { useAppState } from '../context/ContextProviders';
+import { useSortedImageList } from './useSortedImageList';
+import { useHandlers } from './useHandlers';
 
 interface KeyboardShortcutsProps {
-  activeAiPatchContainerId?: string | null;
-  activeAiSubMaskId: string | null;
-  activeMaskContainerId: string | null;
-  activeMaskId: string | null;
-  activeRightPanel: Panel | null;
-  canRedo: boolean;
-  canUndo: boolean;
-  copiedFilePaths: Array<string>;
-  customEscapeHandler: any;
-  handleBackToLibrary(): void;
-  handleCopyAdjustments(): void;
-  handleDeleteAiPatch(patchId: string): void;
-  handleDeleteMaskContainer(containerId: string): void;
-  handleDeleteSelected(): void;
-  handleImageSelect(path: string): void;
-  handlePasteAdjustments(): void;
-  handlePasteFiles(str: string): void;
-  handleRate(rate: number): void;
-  handleRightPanelSelect(panel: Panel): void;
-  handleSetColorLabel(label: string | null): void;
-  handleToggleFullScreen(): void;
-  handleZoomChange(zoomValue: number, fitToWindow?: boolean): void;
-  isFullScreen: boolean;
-  isModalOpen: boolean;
-  isStraightenActive: boolean;
-  isViewLoading: boolean;
-  libraryActivePath: string | null;
-  multiSelectedPaths: Array<string>;
   onSelectPatchContainer?(container: string | null): void;
-  redo(): void;
-  selectedImage: SelectedImage | null;
-  setActiveAiSubMaskId(id: string | null): void;
-  setActiveMaskContainerId(id: string | null): void;
-  setActiveMaskId(id: string | null): void;
-  setCopiedFilePaths(paths: Array<string>): void;
-  setIsStraightenActive(active: any): void;
-  setIsWaveformVisible(visible: any): void;
-  setLibraryActivePath(path: string): void;
-  setMultiSelectedPaths(paths: Array<string>): void;
-  setShowOriginal(show: any): void;
-  sortedImageList: Array<ImageFile>;
-  undo(): void;
-  zoom: number;
-  displaySize?: { width: number; height: number };
-  baseRenderSize?: { width: number; height: number };
-  originalSize?: { width: number; height: number };
 }
 
-export const useKeyboardShortcuts = ({
-  activeAiPatchContainerId,
-  activeAiSubMaskId,
-  activeMaskContainerId,
-  activeMaskId,
-  activeRightPanel,
-  canRedo,
-  canUndo,
-  copiedFilePaths,
-  customEscapeHandler,
-  handleBackToLibrary,
-  handleCopyAdjustments,
-  handleDeleteAiPatch,
-  handleDeleteMaskContainer,
-  handleDeleteSelected,
-  handleImageSelect,
-  handlePasteAdjustments,
-  handlePasteFiles,
-  handleRate,
-  handleRightPanelSelect,
-  handleSetColorLabel,
-  handleToggleFullScreen,
-  handleZoomChange,
-  isFullScreen,
-  isModalOpen,
-  isStraightenActive,
-  isViewLoading,
-  libraryActivePath,
-  multiSelectedPaths,
-  onSelectPatchContainer,
-  redo,
-  selectedImage,
-  setActiveAiSubMaskId,
-  setActiveMaskContainerId,
-  setActiveMaskId,
-  setCopiedFilePaths,
-  setIsStraightenActive,
-  setIsWaveformVisible,
-  setLibraryActivePath,
-  setMultiSelectedPaths,
-  setShowOriginal,
-  sortedImageList,
-  undo,
-  zoom,
-  displaySize,
-  baseRenderSize,
-  originalSize,
-}: KeyboardShortcutsProps) => {
+export const useKeyboardShortcuts = ({ onSelectPatchContainer }: KeyboardShortcutsProps = {}) => {
+  const {
+    activeAiPatchContainerId,
+    activeAiSubMaskId,
+    activeMaskContainerId,
+    activeMaskId,
+    activeRightPanel,
+    history: { canRedo, canUndo },
+    copiedFilePaths,
+    customEscapeHandler,
+    isFullScreen,
+    isStraightenActive,
+    isViewLoading,
+    libraryActivePath,
+    multiSelectedPaths,
+    selectedImage,
+    setActiveAiSubMaskId,
+    setActiveMaskContainerId,
+    setActiveMaskId,
+    setCopiedFilePaths,
+    setIsStraightenActive,
+    setIsWaveformVisible,
+    setLibraryActivePath,
+    setMultiSelectedPaths,
+    setShowOriginal,
+    zoom,
+    displaySize,
+    baseRenderSize,
+    originalSize,
+    isAnyModalOpen: isModalOpen,
+  } = useAppState();
+
+  const {
+    undo,
+    redo,
+    handleBackToLibrary,
+    handleCopyAdjustments,
+    handleDeleteAiPatch,
+    handleDeleteMaskContainer,
+    handleDeleteSelected,
+    handleImageSelect,
+    handlePasteAdjustments,
+    handlePasteFiles,
+    handleRate,
+    handleRightPanelSelect,
+    handleSetColorLabel,
+    handleToggleFullScreen,
+    handleZoomChange,
+  } = useHandlers();
+
+  const { sortedImageList } = useSortedImageList();
+
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (isModalOpen) {
@@ -120,7 +82,7 @@ export const useKeyboardShortcuts = ({
           if (isStraightenActive) {
             setIsStraightenActive(false);
           } else if (customEscapeHandler) {
-            customEscapeHandler();
+            (customEscapeHandler as any)();
           } else if (activeAiSubMaskId) {
             setActiveAiSubMaskId(null);
           } else if (activeAiPatchContainerId && onSelectPatchContainer) {
