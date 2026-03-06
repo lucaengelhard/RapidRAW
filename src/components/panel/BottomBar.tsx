@@ -69,7 +69,6 @@ export default function BottomBar({
 }: BottomBarProps) {
   const {
     bottomPanelHeight: filmstripHeight,
-    imageRatings,
     isCopied,
     isPasted,
     selectedImage,
@@ -79,23 +78,16 @@ export default function BottomBar({
     multiSelectedPaths,
     displaySize,
     originalSize,
-    thumbnails,
-    thumbnailAspectRatio,
     setUiVisibility,
     setIsCopyPasteSettingsModalOpen,
   } = useAppState();
 
   const {
-    handleClearSelection: onClearSelection,
-    handleThumbnailContextMenu: onContextMenu,
     handleCopyAdjustments: onCopy,
-    handleImageClick: onImageSelect,
     handlePasteAdjustments: onPaste,
     handleRate: onRate,
     handleZoomChange: onZoomChange,
   } = useHandlers();
-
-  const { sortedImageList: imageList } = useSortedImageList();
 
   const setIsFilmstripVisible = (value: boolean) =>
     setUiVisibility((prev: UiVisibility) => ({ ...prev, filmstrip: value }));
