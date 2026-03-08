@@ -696,24 +696,14 @@ export default function ExportPanel({
             <span>Estimated file size: ~{formatBytes(estimatedSize)}</span>
           ) : null}
         </div>
-        {isExporting ? (
-          <button
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600/80 text-white font-bold rounded-lg hover:bg-red-600 transition-all"
-            onClick={handleCancel}
-          >
-            <Ban size={18} />
-            Cancel Export
-          </button>
-        ) : (
-          <button
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent text-button-text font-bold rounded-lg hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-            disabled={!canExport || isExporting}
-            onClick={handleExport}
-          >
-            <Save size={18} />
-            Export {numImages > 1 ? `${numImages} Images` : 'Image'}
-          </button>
-        )}
+
+        <ExportButton
+          isExporting={isExporting}
+          canExport={canExport}
+          numImages={numImages}
+          handleCancel={handleCancel}
+          handleExport={handleExport}
+        />
 
         <ExportStatus
           status={Status.Exporting}
@@ -747,7 +737,6 @@ interface ExportStatusProps {
   iconClass?: string;
   additionalClasses?: string;
 }
-
 function ExportStatus({ status, message, icon: Icon, iconClass, additionalClasses }: ExportStatusProps) {
   const {
     exportState: { status: currentStatus },
@@ -760,5 +749,36 @@ function ExportStatus({ status, message, icon: Icon, iconClass, additionalClasse
       <Icon size={16} className={iconClass} />
       <span>{message}</span>
     </div>
+  );
+}
+
+interface ExportButtonProps {
+  isExporting: boolean;
+  canExport: boolean;
+  numImages: number;
+  handleExport: () => Promise<void>;
+  handleCancel: () => Promise<void>;
+}
+function ExportButton({ isExporting, handleExport, handleCancel, canExport, numImages }: ExportButtonProps) {
+  if (isExporting)
+    return (
+      <button
+        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600/80 text-white font-bold rounded-lg hover:bg-red-600 transition-all"
+        onClick={handleCancel}
+      >
+        <Ban size={18} />
+        Cancel Export
+      </button>
+    );
+
+  return (
+    <button
+      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent text-button-text font-bold rounded-lg hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      disabled={!canExport || isExporting}
+      onClick={handleExport}
+    >
+      <Save size={18} />
+      Export {numImages > 1 ? `${numImages} Images` : 'Image'}
+    </button>
   );
 }
