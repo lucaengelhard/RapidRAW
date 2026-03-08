@@ -259,6 +259,7 @@ export default function MainView() {
                           setExportState={setExportState}
                           appSettings={appSettings}
                           onSettingsChange={handleSettingsChange}
+                          isVisible={renderedRightPanel === Panel.Export}
                         />
                       )}
                       {renderedRightPanel === Panel.Ai && (

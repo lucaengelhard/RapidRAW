@@ -19,13 +19,14 @@ import {
   FileFormats,
   WatermarkAnchor,
 } from '../../ui/ExportImportProperties';
-import { Invokes, SelectedImage, AppSettings } from '../../ui/AppProperties';
+import { Invokes, SelectedImage, AppSettings, Panel } from '../../ui/AppProperties';
 import ExportPresetsList from '../../ui/ExportPresetsList';
 import { useExportSettings } from '../../../hooks/useExportSettings';
 import { useAppState } from '../../../context/ContextProviders';
 import clsx from 'clsx';
 
 interface ExportPanelProps {
+  isVisible: boolean;
   adjustments: Adjustments;
   exportState: ExportState;
   multiSelectedPaths: Array<string>;
@@ -171,6 +172,7 @@ export default function ExportPanel({
   setExportState,
   appSettings,
   onSettingsChange,
+  isVisible,
 }: ExportPanelProps) {
   const {
     fileFormat,
@@ -209,15 +211,22 @@ export default function ExportPanel({
     currentSettingsObject,
   } = useExportSettings();
 
-  const initDone = useRef(false);
+  const [hasLoadedSettings, setHasLoadedSettings] = useState(false);
+
   useEffect(() => {
-    if (initDone.current || appSettings === null) return;
-    initDone.current = true;
-    const lastUsed = appSettings.exportPresets?.find((p) => p.id === '__last_used__');
-    if (lastUsed) {
-      handleApplyPreset(lastUsed);
+    if (!isVisible) {
+      setHasLoadedSettings(false);
+      return;
     }
-  }, [appSettings, handleApplyPreset]);
+
+    if (appSettings && !hasLoadedSettings) {
+      const lastUsed = appSettings.exportPresets?.find((p) => p.id === '__last_used__');
+      if (lastUsed) {
+        handleApplyPreset(lastUsed);
+      }
+      setHasLoadedSettings(true);
+    }
+  }, [isVisible, appSettings, hasLoadedSettings, handleApplyPreset]);
 
   const saveLastUsedPreset = useCallback(
     (exportPath: string) => {
@@ -244,6 +253,8 @@ export default function ExportPanel({
 
   const { status, progress, errorMessage } = exportState;
   const isExporting = status === Status.Exporting;
+
+  console.log(multiSelectedPaths, !!selectedImage);
 
   const isEditorContext = !!selectedImage;
   const pathsToExport = isEditorContext
