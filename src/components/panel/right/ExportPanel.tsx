@@ -689,13 +689,7 @@ export default function ExportPanel({
       </div>
 
       <div className="p-4 border-t border-surface flex-shrink-0 space-y-3">
-        <div className="text-center text-xs text-text-tertiary h-4">
-          {isEstimating ? (
-            <span className="italic">Estimating size...</span>
-          ) : estimatedSize !== null ? (
-            <span>Estimated file size: ~{formatBytes(estimatedSize)}</span>
-          ) : null}
-        </div>
+        <ExportEstimate isEstimating={isEstimating} estimatedSize={estimatedSize} />
 
         <ExportButton
           isExporting={isExporting}
@@ -780,5 +774,21 @@ function ExportButton({ isExporting, handleExport, handleCancel, canExport, numI
       <Save size={18} />
       Export {numImages > 1 ? `${numImages} Images` : 'Image'}
     </button>
+  );
+}
+
+interface ExportEstimateProps {
+  isEstimating: boolean;
+  estimatedSize: number | null;
+}
+function ExportEstimate({ isEstimating, estimatedSize }: ExportEstimateProps) {
+  return (
+    <div className="text-center text-xs text-text-tertiary h-4">
+      {isEstimating ? (
+        <span className="italic">Estimating size...</span>
+      ) : estimatedSize !== null ? (
+        <span>Estimated file size: ~{formatBytes(estimatedSize)}</span>
+      ) : null}
+    </div>
   );
 }
